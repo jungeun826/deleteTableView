@@ -7,17 +7,40 @@
 //
 
 #import "ViewController.h"
-
-@interface ViewController ()
+#define CELL_ID @"CELL_ID"
+@interface ViewController ()<UITableViewDataSource, UITabBarDelegate>
 
 @end
 
-@implementation ViewController
+@implementation ViewController{
+    NSMutableArray *data;
+}
+//밀어서 셀 삭제
+- (void)tableView:(UITableView *)tableView commitEditingStyle:(UITableViewCellEditingStyle)editingStyle forRowAtIndexPath:(NSIndexPath *)indexPath{
+    //데이터 삭제
+    [data removeObjectAtIndex:indexPath.row];
+    //테이블 셀 삭제
+    NSArray *rows = [NSArray arrayWithObject:indexPath];
+    [tableView deleteRowsAtIndexPaths:rows withRowAnimation:UITableViewRowAnimationAutomatic];
+}
+//셀 개수
+-(NSInteger) tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section{
+    return [data count];
+}
+//셀 생성하기 - dynamic protorype방식 사용
+-(UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath{
+    UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:CELL_ID forIndexPath:indexPath];
+    
+    cell.textLabel.text = [data objectAtIndex:indexPath.row];
+    
+    return cell;
+}
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
 	// Do any additional setup after loading the view, typically from a nib.
+    data = [[NSMutableArray alloc] initWithObjects:@"a",@"b",@"c",@"d",@"e",@"f",nil];
 }
 
 - (void)didReceiveMemoryWarning
